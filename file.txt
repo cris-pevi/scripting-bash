@@ -1,0 +1,239 @@
+-la conecciòn ssh se establece como lo siguiente:
+ssh usuario@localhost(pagina) -p(puerto) 2200
+
+EN este caso nos indican que el usuario es bandit0 
+y que la pàgina es bandit.labs.overthewire.org(a esto se le llama host) y nos indican el 
+puerto 2220
+
+y aqui en el nivel 0 nos indican que la contraseña es bandit0, y esto(la contraseña) es usualmente
+lo que tenemos que encontrar.
+
+Si visualizamos el hostname -I, la IP nos aparece como 10.0.1.98, y por ejemplo el de mi ppc es 172.18.135.211,
+totamente diferente es decir estamos en otro sitio
+
+----------------------------------
+SI abrimos el archivo readme con cat readme
+
+
+nos encontraremos con la contraseña para pasar al nivel 1:
+ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If (a esto se le llama la flag)
+
+Aquì ya podemos pasar al nivel 1, igual por ssh, entonces
+primero salimos con exit y luego ya hacemos nuevamente ssh
+
+-> ssh bandit1@bandit.labs.overthewire.org -p 2220
+
+Aqui el problema es que el fichero se llama "-"
+Los guiones dan problemas porque imaginemos que el fichero se llama hola,
+entonces yo solo tengo que poner cat hola
+pero al llamarse "-", tengo que hacer cat -
+y el sistema se queda esperando una flag, entonces no se puede acceder como normalmente hariamos
+
+--lo toma como cat -o, cat -l
+
+aplicamos ls -l - : para que nos aparezca todos los permisos que tiene
+
+pwd : comando para saber donde estoy
+
+Podemos hacer cat /home/bandit1/- y asi es como accedemos al contenido
+
+bandit1@bandit:~$ pwd
+/home/bandit1
+bandit1@bandit:~$ cat /home/bandit1/-
+263JGJPfgU6LtdEvgfWU1XP5yac29mFx
+bandit1@bandit:~$ cat ./-
+263JGJPfgU6LtdEvgfWU1XP5yac29mFx
+bandit1@bandit:~$ cat *   
+^C
+bandit1@bandit:~$ cat ./*
+263JGJPfgU6LtdEvgfWU1XP5yac29mFx
+bandit1@bandit:~$ pwd
+/home/bandit1
+bandit1@bandit:~$ cat $(pwd)/*
+263JGJPfgU6LtdEvgfWU1XP5yac29mFx
+bandit1@bandit:~$ cat $(pwd)/-
+263JGJPfgU6LtdEvgfWU1XP5yac29mFx
+bandit1@bandit:~$
+
+Podemos acceder de muchas formas
+
+-------------------------------------------------------
+Ahora la siguiente contraseña esta almacenada en el siguiente fichero:
+
+bandit2@bandit:~$ ls
+--spaces in this filename--
+bandit2@bandit:~$ 
+
+bandit2@bandit:~$ cat "--spaces in this filename--" 
+cat: unrecognized option '--spaces in this filename--'
+Try 'cat --help' for more information.
+bandit2@bandit:~$ cat ./* 
+MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+bandit2@bandit:~$ pwd 
+/home/bandit2
+bandit2@bandit:~$ cat $(pwd)/* 
+MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+bandit2@bandit:~$ cat /home/bandit2/--spaces\ in\ this\ filename-- 
+MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+bandit2@bandit:~$ cat ./*            
+MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+bandit2@bandit:~$ cat --
+^C
+bandit2@bandit:~$ cat --sp*
+cat: unrecognized option '--spaces in this filename--'
+Try 'cat --help' for more information.
+bandit2@bandit:~$ cat *sp* 
+cat: unrecognized option '--spaces in this filename--'
+Try 'cat --help' for more information.
+bandit2@bandit:~$ cat **sp**
+cat: unrecognized option '--spaces in this filename--'
+Try 'cat --help' for more information.
+bandit2@bandit:~$ cat *name--
+cat: unrecognized option '--spaces in this filename--'
+Try 'cat --help' for more information.
+bandit2@bandit:~$ cat *this*
+cat: unrecognized option '--spaces in this filename--'
+Try 'cat --help' for more information.
+bandit2@bandit:~$ cat home/bandit2/*
+cat: 'home/bandit2/*': No such file or directory
+bandit2@bandit:~$ ls                
+--spaces in this filename--
+bandit2@bandit:~$ 
+bandit2@bandit:~$ pwd
+/home/bandit2
+bandit2@bandit:~$ cat /home/bandit2/*
+MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+bandit2@bandit:~$ cat ./*name*
+MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+bandit2@bandit:~$ cat ./*name--
+MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+bandit2@bandit:~$ cat ./--*
+MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+bandit2@bandit:~$ cat $(pwd)/*this*
+MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+bandit2@bandit:~$
+
+--------------------------------------------------------------------
+
+Y ahora ya estamos en bandit 3
+
+y aqhi tenemos un directorio inhere
+NO podemos ver el archivo porque es un archivo oculto, entonces
+para ver un archivo oculto podemos colocar ls -la inhere
+
+ls -ls
+
+ahora tambien podemos tirar del find, y podemos colocar
+find .
+
+y nos apareceran todos los archivos a aprtir de esa ruta que hayan
+
+y con find uno puede jugar para ver el contenido de forma legible
+
+Aqui tambien aprendemos lo que es xargs que es bastante comodo para 
+ejecutar comandos sobre el output pero de forma paralela
+
+el xargs es bastante util porque por ejemplo tambien puedo grepear, encontrar una palabra de un documento
+
+
+
+######################################
+còdigo de la computadora
+2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ clave para bandit4
+
+
+bandit3@bandit:~$ ls
+inhere
+bandit3@bandit:~$ ls
+inhere
+bandit3@bandit:~$ ls -l
+total 4
+drwxr-xr-x 2 root root 4096 Oct 14 09:26 inhere
+bandit3@bandit:~$ ls ./inhere
+bandit3@bandit:~$ ls ./inhere -l
+total 0
+bandit3@bandit:~$ ls inhere
+bandit3@bandit:~$ ls -la inhere
+total 12
+drwxr-xr-x 2 root    root    4096 Oct 14 09:26 .
+drwxr-xr-x 3 root    root    4096 Oct 14 09:26 ..
+-rw-r----- 1 bandit4 bandit3   33 Oct 14 09:26 ...Hiding-From-You
+bandit3@bandit:~$ ls inhere/
+bandit3@bandit:~$ ls            
+inhere
+bandit3@bandit:~$ find .
+.
+./.bash_logout
+./inhere
+./inhere/...Hiding-From-You
+./.bashrc
+./.profile
+bandit3@bandit:~$ ls
+inhere
+bandit3@bandit:~$ find . -typef
+find: unknown predicate `-typef'
+bandit3@bandit:~$ find . -type f
+./.bash_logout
+./inhere/...Hiding-From-You
+./.bashrc
+./.profile
+bandit3@bandit:~$ find . -type f -printf "%f\t%p\t%u\t%g\t%m\n"
+.bash_logout	./.bash_logout	root	root	644
+...Hiding-From-You	./inhere/...Hiding-From-You	bandit4	bandit3	640
+.bashrc	./.bashrc	root	root	644
+.profile	./.profile	root	root	644
+bandit3@bandit:~$ find . -type f -printf "%f\t%p\t%u\t%g\t%m\n" | column -t
+.bash_logout        ./.bash_logout               root     root     644
+...Hiding-From-You  ./inhere/...Hiding-From-You  bandit4  bandit3  640
+.bashrc             ./.bashrc                    root     root     644
+.profile            ./.profile                   root     root     644
+bandit3@bandit:~$ cat ./inhere/...Hiding-From-You 
+2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ
+bandit3@bandit:~$ find . --name *You   
+find: unknown predicate `--name'
+bandit3@bandit:~$ find . -name *You 
+./inhere/...Hiding-From-You
+bandit3@bandit:~$ find . -name *You | cat
+./inhere/...Hiding-From-You
+bandit3@bandit:~$ find . -name *You | xargs cat
+2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ
+bandit3@bandit:~$ find . -type f | xargs cat
+
+bandit3@bandit:~$ find . -type f | xargs grep "private"
+./.profile:# set PATH so it includes user's private bin if it exists
+./.profile:# set PATH so it includes user's private bin if it exists
+
+
+bandit3@bandit:~$ ls
+inhere
+bandit3@bandit:~$ cat ./inhere/*OU*
+cat: './inhere/*OU*': No such file or directory
+bandit3@bandit:~$ cat ./inhere/*ou*
+cat: './inhere/*ou*': No such file or directory
+bandit3@bandit:~$ find .           
+.
+./.bash_logout
+./inhere
+./inhere/...Hiding-From-You
+./.bashrc
+./.profile
+bandit3@bandit:~$ find . -name *ou* | xargs cat
+# ~/.bash_logout: executed by bash(1) when login shell exits.
+
+# when leaving the console clear the screen to increase privacy
+
+if [ "$SHLVL" = 1 ]; then
+    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
+fi
+2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ
+bandit3@bandit:~$ find . -name *ou* | xargs cat^C
+bandit3@bandit:~$ 
+
+
+
+
+
+
+
+
+
