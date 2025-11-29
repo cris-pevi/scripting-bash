@@ -543,13 +543,37 @@ cat /etc/passwd | head -n 1 | sed 's/root//g'
 
 Y entonces podemos tirar de eso para borrar los espacios
 
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033c | xargs cat | sed 's/^ *//'                                            
+HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033c | xargs cat | sed 's/\s*$/' 
 
-				
+Aqui basicamente la segunda s es de espacio y el dolar indica que termine en nada
 
+----------------------------------------------------------------------
 
+ES interesante porque pasa que por ejemplo se explica un diccionario de claves que se denomina rockyou
+y le hacecn un grep para poder encontrar coincidencias, y bueno tu con grep
+puedes encontrar coincidencias de esa palabra
+pero tambien puedes colocarle para que empiecen con esa palabra o para que termine con esa palabra
+y ademas luego puedes saber la linea en la que se encuentra
 
+cat /usr/share/wordlists/rockyou.txt | grep "hola"				-> aqui me saldra un monton de coincidencias
+
+cat /usr/share/wordlists/rockyou.txt | grep "^hola"                -> aqui me saldra un monton de coincidencias que empiecen con hola
+
+y si quiero que finalice explicitamente con a, hago lo siguiente
+
+cat /usr/share/wordlists/rockyou.txt | grep "^hola$"                -> aqui me saldra solo la palbra hola
  
+cat /usr/share/wordlists/rockyou.txt | grep "^hola$" -n 				-> y con esto yo puedo saber la linea en la que se encuentra dicha palabra
+19994:hola
  
+cat /usr/share/wordlists/rockyou.txt | awk "NR==19994"
+hola
+
+
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033c | xargs cat | sed 's/\t//g'
+HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
 
 
 
