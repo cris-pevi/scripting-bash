@@ -1,0 +1,3 @@
+GIF8;
+
+Hola que tal, esto es un texto

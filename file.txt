@@ -229,6 +229,333 @@ fi
 bandit3@bandit:~$ find . -name *ou* | xargs cat^C
 bandit3@bandit:~$ 
 
+--------------------------------------------------------------------
+
+En el nivel 4 nos indican que la contraseña està almacenada en el
+directorio inhere y està almacenada en un archivo que es legible
+
+Entonces si hacemos un ls -la,
+veremos muchos archivos, iigual si hacemos un "find ."
+
+Aqui podemos tirar de la herramienta file
+este comnando esta dentro deel path 
+
+Ahora para que me sirve? es porque por ejemplo si yo hago un
+file foto_de_helado.jpg
+me va ha salir algo como : JPEG image data,
+es decir me va a decir de que trata el archivo, que es lo que contiene, que tipo de archivo es
+
+SI yo tengo un aarchivo file.txt
+que le he colocado como contenido:
+
+GIF8;
+Hola que tal soy un texto
+
+-----------------
+al momento de hacer un file
+file file.txt
+
+❯ file test.txt
+test.txt: GIF image data 18442 x 27759
+
+me sale eso poir los magic numbers, que es el GIF8
+Los magic numbers corresponden a un GIF8 me lo lee como un GiF,
+por eso me dice q	ue es un GIF.
+
+file, por loo tanto es un buen comando para poder saber conque tipo 
+de ficherito estamos tratando
+
+Entonces, ahora podemos hacer algo como listame de que tipo de archivo son los
+ficheritos que tengo esta ruta
+
+
+######################3
+bandit4@bandit:~$ ls
+inhere
+bandit4@bandit:~$ find .
+.
+./.bash_logout
+./inhere
+./inhere/-file02
+./inhere/-file04
+./inhere/-file08
+./inhere/-file00
+./inhere/-file07
+./inhere/-file06
+./inhere/-file01
+./inhere/-file03
+./inhere/-file05
+./inhere/-file09
+./.bashrc
+./.profile
+bandit4@bandit:~$ ls -l 
+total 4
+drwxr-xr-x 2 root root 4096 Oct 14 09:26 inhere
+bandit4@bandit:~$ ls -l inhere/
+total 40
+-rw-r----- 1 bandit5 bandit4 33 Oct 14 09:26 -file00
+-rw-r----- 1 bandit5 bandit4 33 Oct 14 09:26 -file01
+-rw-r----- 1 bandit5 bandit4 33 Oct 14 09:26 -file02
+-rw-r----- 1 bandit5 bandit4 33 Oct 14 09:26 -file03
+-rw-r----- 1 bandit5 bandit4 33 Oct 14 09:26 -file04
+-rw-r----- 1 bandit5 bandit4 33 Oct 14 09:26 -file05
+-rw-r----- 1 bandit5 bandit4 33 Oct 14 09:26 -file06
+-rw-r----- 1 bandit5 bandit4 33 Oct 14 09:26 -file07
+-rw-r----- 1 bandit5 bandit4 33 Oct 14 09:26 -file08
+-rw-r----- 1 bandit5 bandit4 33 Oct 14 09:26 -file09
+bandit4@bandit:~$ find . -name -file*
+./inhere/-file02
+./inhere/-file04
+./inhere/-file08
+./inhere/-file00
+./inhere/-file07
+./inhere/-file06
+./inhere/-file01
+./inhere/-file03
+./inhere/-file05
+./inhere/-file09
+bandit4@bandit:~$ file
+Usage: file [-bcCdEhikLlNnprsSvzZ0] [--apple] [--extension] [--mime-encoding]
+            [--mime-type] [-e <testname>] [-F <separator>]  [-f <namefile>]
+            [-m <magicfiles>] [-P <parameter=value>] [--exclude-quiet]
+            <file> ...
+       file -C [-m <magicfiles>]
+       file [--help]
+bandit4@bandit:~$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+bandit4@bandit:~$ find . | xargs file
+.:                directory
+./.bash_logout:   ASCII text
+./inhere:         directory
+./inhere/-file02: OpenPGP Public Key
+./inhere/-file04: data
+./inhere/-file08: data
+./inhere/-file00: data
+./inhere/-file07: ASCII text
+./inhere/-file06: data
+./inhere/-file01: OpenPGP Public Key
+./inhere/-file03: data
+./inhere/-file05: data
+./inhere/-file09: data
+./.bashrc:        ASCII text
+./.profile:       ASCII text
+bandit4@bandit:~$ find . -name *ile* | xargs file
+./inhere/-file02: OpenPGP Public Key
+./inhere/-file04: data
+./inhere/-file08: data
+./inhere/-file00: data
+./inhere/-file07: ASCII text
+./inhere/-file06: data
+./inhere/-file01: OpenPGP Public Key
+./inhere/-file03: data
+./inhere/-file05: data
+./inhere/-file09: data
+./.profile:       ASCII text
+bandit4@bandit:~$ find . -name file* | xargs file
+Usage: file [-bcCdEhikLlNnprsSvzZ0] [--apple] [--extension] [--mime-encoding]
+            [--mime-type] [-e <testname>] [-F <separator>]  [-f <namefile>]
+            [-m <magicfiles>] [-P <parameter=value>] [--exclude-quiet]
+            <file> ...
+       file -C [-m <magicfiles>]
+       file [--help]
+bandit4@bandit:~$ find . -name -file* | xargs file
+./inhere/-file02: OpenPGP Public Key
+./inhere/-file04: data
+./inhere/-file08: data
+./inhere/-file00: data
+./inhere/-file07: ASCII text
+./inhere/-file06: data
+./inhere/-file01: OpenPGP Public Key
+./inhere/-file03: data
+./inhere/-file05: data
+./inhere/-file09: data
+
+###############################
+Incluso podemos sacar el tiempo de computo para este comando
+
+bandit4@bandit:~$ time find . -name -file* | xargs file 
+./inhere/-file02: OpenPGP Public Key
+./inhere/-file04: data
+./inhere/-file08: data
+./inhere/-file00: data
+./inhere/-file07: ASCII text
+./inhere/-file06: data
+./inhere/-file01: OpenPGP Public Key
+./inhere/-file03: data
+./inhere/-file05: data
+./inhere/-file09: data
+
+real	0m0.027s
+user	0m0.013s
+sys	0m0.012s
+bandit4@bandit:~$ time file inhere/*
+inhere/-file00: data
+inhere/-file01: OpenPGP Public Key
+inhere/-file02: OpenPGP Public Key
+inhere/-file03: data
+inhere/-file04: data
+inhere/-file05: data
+inhere/-file06: data
+inhere/-file07: ASCII text
+inhere/-file08: data
+inhere/-file09: data
+
+real	0m0.046s
+user	0m0.014s
+sys	0m0.007s
+
+
+Nos podemos dar cuenta que tarta un poco màs
+
+Entonces podemos ver que hay solo uno que tiene ASCII text
+
+
+bandit4@bandit:~$ find . -name -file07 | xargs cat
+4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw
+bandit4@bandit:~$ cat $(find . -name -file07) 
+4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw
+bandit4@bandit:~$ 
+
+---------------------------------------------------------------------------------------------
+BIen ahora estamnos en Bandit level 5 -> level 6
+
+Nos indican que la contraseña està almacenada en algun sitio debajo del directorio inhere
+y tiene las siguientes propiedades, 
+es humanamente legible
+pesa 1033 bytes
+y es un no ejecutable
+
+Aqui podemos ejecutar varios camandos , por ejemplo
+
+ls 			-> para ver que archivos hay
+find .		-> tambien nos va a listar los archivos que hay
+ls -l inhere/maybehere 		-> aqui podemos ver que dentro de las carpetas hay màs archivos y buscar
+uno por uno serìa un error grave, nos demorariamos mucho
+
+find . -type f -readable 		-> Los archivos que se pueden leer
+find . -type f -executable		-> Los archivos que se pueden ejecutar
+find . -type f -writable		-> Los archivos que se pueden leer
+
+find . -type f -writable ! -executable 		->EL signo de exclamacion puedo ponerlo porque eso indica que sera "NO ejecutable"
+
+Podemos abrir el manual con un
+find --help
+
+ES muy interesante porque incluso puedo buscar una palabra o las coincidencias con una palabra
+find --help | grep size
+
+Y ahi me aparece:
+
+bandit5@bandit:~$ find --help | grep siz  
+      -wholename PATTERN -size N[bcwkMG] -true -type [bcdpflsD] -uid N
+
+
+
+ Si hago ctrl + R
+puedo ver lo que anteriormente puse en relacion con las primeras palbras, y 
+esto me sirve para no poner todo nuevamente
+
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033c
+
+Con esto yo puedo darle el tamaño en bytes que tiene el archivo
+
+y ahora yo le puedo hacer un xargs cat
+
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033c
+./inhere/maybehere07/.file2
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033c | xargs cat
+HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
+
+Y ademas, xargs me permite hacer un formateo de la salida
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033c | xargs cat | xargs
+HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
+
+tr sirve para realizar sustituciones o para eliminar algunos caracteres
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033c | xargs cat | tr -d '\n'
+
+para eliminar los saltos de linea
+
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033c | xargs cat | tr -d '\t'
+
+para eliminar los tabuladores
+
+bandit5@bandit:~$ find . -type f -readable ! -executable -size 1033c | xargs cat | sed 's/\t//g'
+HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
+
+coin sed tambien podemos hacer lo mismo
+
+##############################################
+Aqui es bastante interesante porque aprendemos a pipear y a pasar el output de un comando como entrada para otro
+
+❯ cat /etc/passwd | head -n 1
+root:x:0:0:root:/root:/usr/bin/zsh
+❯ cat /etc/passwd | head -n 2
+root:x:0:0:root:/root:/usr/bin/zsh
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+❯ cat /etc/passwd | head -n 3
+root:x:0:0:root:/root:/usr/bin/zsh
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+
+
+❯ cat /etc/passwd | tail -n 3
+nm-openvpn:x:127:137:NetworkManager OpenVPN,,,:/var/lib/openvpn/chroot:/usr/sbin/nologin
+nm-openconnect:x:128:138:NetworkManager OpenConnect plugin,,,:/var/lib/NetworkManager:/usr/sbin/nologin
+cybercris:x:1000:1001:Cristhyan:/home/cybercris:/usr/bin/zsh
+
+
+❯ cat /etc/passwd | awk 'NR==2'
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+
+pUEDO HACER QUE ME muestre solo una linea en particular
+
+Y aqui aprendemos que sed sirve entre otras cosas para poder hacer sustituciones
+Tenemos que poner "s" de sustituir, luego la palabra que vamos a sustituir y luego la sustituciòn
+
+❯ cat /etc/passwd | head -n 1 | sed 's/root/noroot/'
+
+SI quiero que aplique para todo tengo que colocarle una g al final 
+
+❯ cat /etc/passwd | head -n 1 | sed 's/root/noroot/g'
+
+------------------------------------------------------------------------
+AHora yo puedo hacer un grep para poder ver por ejemplo donde estan las palabras que contiene root
+
+❯ cat /etc/passwd | grep "root"
+root:x:0:0:root:/root:/usr/bin/zsh
+nm-openvpn:x:127:137:NetworkManager OpenVPN,,,:/var/lib/openvpn/chroot:/usr/sbin/nologin
+❯ cat /etc/passwd | grep "^root"
+root:x:0:0:root:/root:/usr/bin/zsh
+
+con esto puede solo empezar con root.
+
+Y a eso es a lo que se le llama expresiones regulares
+
+cat /etc/passwd | head -n 1 | sed 's/root/noroot'
+noroot:x:0:0.....                                              -> AQui mw cambia la palabra root por noroot
+
+cat /etc/passwd | head -n 1 | sed 's/root//'
+:x:0::0.........												-> Aqui me lo cambia por nada la palbra root
+
+Y si quiero que cambie en todos los lugares
+cat /etc/passwd | head -n 1 | sed 's/root//g'
+
+Y entonces podemos tirar de eso para borrar los espacios
+
+
+				
+
+
+
+ 
+ 
+
+
+
+
+
+
 
 
 
